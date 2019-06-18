@@ -1,5 +1,6 @@
-
 // Actions : Fetch all books
+import * as _ from "lodash";
+
 export const fetchBooksBegin = () => ({
   type: 'FETCH_BOOKS_BEGIN'
 });
@@ -61,23 +62,26 @@ export function getBook(id) {
   return dispatch => {
     dispatch(getBookBegin());
     return fetch(`https://www.anapioficeandfire.com/api/books/${id}`)
-      .then(res => res.json())
-      .then(json => {
-        dispatch(getBookSuccess(json));
-        json.charactersc = [];
-        json.characters.map(url => {
-          return fetch(url)
-            .then(res2 => res2.json())
-            .then(json2 => {
-              json.charactersc.push(json2);
-              return json;
-            });
-          // .catch(error => dispatch(getCharacterFailure(error)));
-      });
-    //return json.book;
-  })
-      .catch (error => dispatch(getBookFailure(error)));
-};
+      .then(book => book.json())
+      .then(bookJSON => {
+        bookJSON.charactersc = [];
+        Promise.all(
+          // For some reason, using JavaScript's map causes issues -> use Lodash instead.
+          _.map(bookJSON.characters, charactersURL => {
+            return fetch(charactersURL)
+              .then(character => character.json())
+              .then(characterJSON => {
+                bookJSON.charactersc.push(characterJSON);
+              });
+          })
+        ).then(() => {
+          dispatch(getBookSuccess(bookJSON));
+        })
+        // .catch(error => dispatch(getCharacterFailure(error)));
+        //return json.book;
+      })
+      .catch(error => dispatch(getBookFailure(error)));
+  };
 }
 
 /*export function getCharacter(url) {

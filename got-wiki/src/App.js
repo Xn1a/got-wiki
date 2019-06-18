@@ -1,6 +1,6 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import BooksTable from './components/BooksTable';
 
 function App() {
   return (
@@ -9,6 +9,9 @@ function App() {
         <h1>Games of Thrones Wiki</h1>
         <h3>Books</h3>
       </header>
+      <article>
+        <BooksTable/>
+      </article>
     </div>
   );
 }

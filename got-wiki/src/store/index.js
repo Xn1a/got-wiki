@@ -4,6 +4,7 @@ import thunk from "redux-thunk";
 
 const initialState = {
     books: [],
+    book: {},
     loading: false,
     error: null
 };

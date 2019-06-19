@@ -3,6 +3,7 @@ import '../App.css';
 import { store } from '../store';
 import { fetchBooks } from '../actions';
 import { connect } from "react-redux";
+import { Link } from 'react-router-dom';
 
 class BooksTable extends Component {
 
@@ -22,21 +23,29 @@ class BooksTable extends Component {
         }
 
         return (
-            <table>
-                <th>Book Name</th>
-                <th>Released Date</th>
-                <th>Number Of Pages</th>
-                <th>Details</th>
+            <div>
+                <h3>Books</h3>
+                <table>
+                    <th>Book Name</th>
+                    <th>Released Date</th>
+                    <th>Number Of Pages</th>
+                    <th>Details</th>
 
-                {books.map(book =>
-                    <tr key={book.id}>
-                        <td>{book.name}</td>
-                        <td>{book.released}</td>
-                        <td>{book.numberOfPages}</td>
-                        <td>Details</td>
-                    </tr>
-                )}
-            </table>
+                    {books.map(book => {
+
+                        book.id = book.url.split('/')[5];
+
+                        return (
+                            <tr key={book.id}>
+                                <td>{book.name}</td>
+                                <td>{book.released}</td>
+                                <td>{book.numberOfPages}</td>
+                                <td><Link to={`/book/${book.id}`}><button>Details</button></Link></td>
+                            </tr>);
+                    }
+                    )}
+                </table>
+            </div>
         );
     }
 }

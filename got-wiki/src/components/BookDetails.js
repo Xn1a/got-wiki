@@ -7,9 +7,10 @@ import { Link } from 'react-router-dom';
 
 class BookDetails extends Component {
 
-    constructor({ match }) {
-        super();
-        store.getState().book.id = match.params.id;
+    constructor(props) {
+        // You should pass the props to the parent constructor.
+        super(props);
+        store.getState().book.id = props.match.params.id;
     }
 
     componentDidMount() {
@@ -55,18 +56,19 @@ class BookDetails extends Component {
 }
 
 function listCharacters(book) {
-    if (book.charactersc) {
-        book.charactersc.map(character => {
-            console.log(character.name)
-            character.id = character.url.split('/')[5];
-            return (
-                <tr key={character.id}>
-                    <td>{character.name}</td>
-                    <td><Link to={`/character/${character.id}`}><button>Details</button></Link></td>
-                </tr>
-            );
-        });
-    }
+  if (book.charactersc) {
+    // You missed a return here, but it was there on the screenshot you sent us.
+    return book.charactersc.map(character => {
+      console.log(character.name)
+      character.id = character.url.split('/')[5];
+      return (
+        <tr key={character.id}>
+          <td>{character.name}</td>
+          <td><Link to={`/character/${character.id}`}><button>Details</button></Link></td>
+        </tr>
+      );
+    });
+  }
 }
 
 const mapStateToProps = state => ({
